@@ -1,72 +1,31 @@
 # Database Instance Cheatsheet:
 provider "aws" {
-  region = "us-east-1"
+  #version = "~> 2.0"
+  region = var.region
 }
 
 
 ##################################################################################
 # DB instance
 ##################################################################################
-resource "aws_db_instance" "mydb1" {
+resource "aws_db_instance" "postgresdb" {
   allocated_storage        = 256 # gigabytes
   backup_retention_period  = 7   # in days
-  db_subnet_group_name     = "${var.rds_public_subnet_group}"
+  db_subnet_group_name     = aws_db_subnet_group.default.name
   engine                   = "postgres"
   engine_version           = "9.5.4"
-  identifier               = "mydb1"
+  identifier               = "postgresdb"
   instance_class           = "db.r3.large"
   multi_az                 = false
-  name                     = "mydb1"
-  parameter_group_name     = "mydbparamgroup1" # if you have tuned it
-  password                 = "${trimspace(file("${path.module}/secrets/mydb1-password.txt"))}"
+  name                     = "postgresdb"
+  #parameter_group_name     = "postgresparamgroup1" # if you have tuned it
+  password                 = "${trimspace(file("${path.module}/secrets/postgresdb-password.txt"))}"
   port                     = 5432
   publicly_accessible      = true
   storage_encrypted        = true # you should always do this
   storage_type             = "gp2"
-  username                 = "mydb1"
-  vpc_security_group_ids   = ["${aws_security_group.mydb1.id}"]
-}
-
-##################################################################################
-#security group
-##################################################################################
-
-resource "aws_security_group" "mydb1" {
-  name = "mydb1"
-description = "RDS postgres servers (terraform-managed)"
-  vpc_id = "${var.rds_vpc_id}"
-# Only postgres in
-  ingress {
-    from_port = 5432
-    to_port = 5432
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-# Allow all outbound traffic.
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-##################################################################################
-# VPC
-##################################################################################
-variable "rds_vpc_id" {
-  default = "vpc-XXXXXXXX"
-  description = "Our default RDS virtual private cloud (rds_vpc)."
-}
-
-variable "rds_public_subnets" {
-  default = "subnet-YYYYYYYY,subnet-YYYYYYYY,subnet-YYYYYYYY,subnet-YYYYYYYY"
-  description = "The public subnets of our RDS VPC rds-vpc."
-}
-
-variable "rds_public_subnet_group" {
-  default = "default-vpc-XXXXXXXX"
-  description = "Apparently the group name, according to the RDS launch wizard."
+  username                 = "postgresdb"
+  vpc_security_group_ids   = ["${aws_security_group.AWS_VPC_Security_Group.id}"]
 }
 
 # https://blog.faraday.io/how-to-create-an-rds-instance-with-terraform/

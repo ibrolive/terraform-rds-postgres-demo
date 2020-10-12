@@ -4,7 +4,7 @@
 ### Create database password file - on windows
 ```
 mkdir secrets
-echo "Your_DB_Password" > secrets/mydb1-password.txt
+echo "Your_DB_Password" > secrets/postgresdb-password.txt
 ```
 
 ### Execute IaC scripts

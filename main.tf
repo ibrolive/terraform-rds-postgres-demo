@@ -27,6 +27,3 @@ resource "aws_db_instance" "postgresdb" {
   username                 = "postgresdb"
   vpc_security_group_ids   = ["${aws_security_group.AWS_VPC_Security_Group.id}"]
 }
-
-# https://blog.faraday.io/how-to-create-an-rds-instance-with-terraform/
-

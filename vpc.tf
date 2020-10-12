@@ -180,6 +180,6 @@ resource "aws_db_subnet_group" "default" {
   tags = {
     Name = "DB subnet group"
   }
-}
+} # end resource
 
 # end vpc.tf

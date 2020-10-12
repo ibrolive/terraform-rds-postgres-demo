@@ -22,3 +22,5 @@ terraform plan
 terraform apply
 terraform destroy
 ```
+
+If you're looking for a simpler version see - https://blog.faraday.io/how-to-create-an-rds-instance-with-terraform/
